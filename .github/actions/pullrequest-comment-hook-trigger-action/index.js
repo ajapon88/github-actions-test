@@ -16,7 +16,7 @@ try {
     // get pull request
     const githubToken = core.getInput('github-token');
     const octokit = github.getOctokit(githubToken)
-    const { data: pullRequest } = await octokit.pulls.get({
+    const { data: pullRequest } = octokit.pulls.get({
         owner: github.repository_owner,
         repo: github.event.repository.name,
         pull_number: github.event.issue.number
