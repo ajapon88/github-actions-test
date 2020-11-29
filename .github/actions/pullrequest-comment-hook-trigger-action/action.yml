@@ -1,0 +1,29 @@
+name: "PullRequest Comment Hook Trigger"
+description: "PullRequest comment hook trigger"
+inputs:
+  github-token:
+    description: "Github Token"
+    required: true
+  trigger-phrase:
+    description: "Trigger phrase"
+    required: true
+outputs:
+      triggerd:
+        description: if true, triggerd. otherwize, not triggerd
+      number:
+        description: pull request number
+      comment_body:
+        description: pull request comment body
+      user:
+        description: comment user
+      ref:
+        description: pull request branch
+      sha:
+        description: pull request sha
+      title:
+        description: pull request title
+      description:
+        description: pull request body
+runs:
+  using: "node12"
+  main: "index.js"
