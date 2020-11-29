@@ -44,7 +44,14 @@ jobs:
     needs:
       - pr_comment_trigger
     steps:
-      - name: triggered_action
-        run: |
-          echo "Triggered!"
-          echo "${{ toJson(needs.pr_comment_trigger.outputs) }}"
+      - name: comment pullrequest
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.issues.createComment({
+              issue_number: needs.pr_comment_trigger.outputs.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "${{ toJson(needs.pr_comment_trigger.outputs) }}"
+            })
