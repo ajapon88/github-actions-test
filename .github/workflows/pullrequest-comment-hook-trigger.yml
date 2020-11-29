@@ -47,10 +47,10 @@ jobs:
               repo: context.repo.repo,
               issue_number: ${{ needs.pr_comment_trigger.outputs.number }}
             })
-            console.log("::set-output name=ref::${{ pull_request.head.ref }}")
-            console.log("::set-output name=sha::${{ pull_request.head.sha }}")
-            console.log("::set-output name=title::${{ pull_request.title }}")
-            console.log("::set-output name=description::${{ pull_request.body }}")
+            console.log("::set-output name=ref::%s", pull_request.head.ref)
+            console.log("::set-output name=sha::%s", pull_request.head.sha)
+            console.log("::set-output name=title::%s", pull_request.title)
+            console.log("::set-output name=description::%s", pull_request.body)
 
   triggered_action:
     runs-on: ubuntu-latest
