@@ -53,5 +53,5 @@ jobs:
               issue_number: ${{ needs.pr_comment_trigger.outputs.number }},
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: ${{ toJson(needs.pr_comment_trigger.outputs) }}
+              body: '${{ toJson(needs.pr_comment_trigger.outputs) }}'
             })
