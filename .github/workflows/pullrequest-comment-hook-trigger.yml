@@ -42,12 +42,12 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const pull_request = await github.pulls.get({
+            const response = await github.pulls.get({
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: context.issue.number
             })
-            console.log(JSON.stringify(pull_request));
+            const pull_request = response.data
             console.log("::set-output name=ref::%s", pull_request.head.ref)
             console.log("::set-output name=sha::%s", pull_request.head.sha)
             console.log("::set-output name=title::%s", pull_request.title)
