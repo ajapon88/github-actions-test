@@ -50,7 +50,7 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             github.issues.createComment({
-              issue_number: needs.pr_comment_trigger.outputs.number,
+              issue_number: ${{ needs.pr_comment_trigger.outputs.number }},
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: ${{ needs.pr_comment_trigger.outputs }}
