@@ -16,6 +16,7 @@ jobs:
       title: ${{ steps.trigger.outputs.title }}
       description: ${{ steps.trigger.outputs.description }}
     steps:
+      - uses: actions/checkout@v2
       - uses: ./.github/actions/pullrequest-comment-hook-trigger-action
         id: trigger
         with:
