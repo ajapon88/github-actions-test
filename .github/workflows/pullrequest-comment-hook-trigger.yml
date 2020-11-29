@@ -40,17 +40,11 @@ jobs:
 
   triggered_action:
     runs-on: ubuntu-latest
-    if: ${{ needs.pr_commet_trigger.outputs.triggerd }} == 'true'
+    if: ${{ needs.pr_comment_trigger.outputs.triggerd }} == 'true'
     needs:
       - pr_comment_trigger
     steps:
       - name: triggered_action
         run: |
           echo "Triggered!"
-          echo "triggerd: ${{ needs.pr_commet_trigger.outputs.triggerd }}"
-          echo "number: ${{ needs.pr_commet_trigger.outputs.number }}"
-          echo "body: ${{ needs.pr_commet_trigger.outputs.body }}"
-          echo "user: ${{ needs.pr_commet_trigger.outputs.user }}"
-          echo "ref: ${{ needs.pr_commet_trigger.outputs.ref }}"
-          echo "title: ${{ needs.pr_commet_trigger.outputs.title }}"
-          echo "description: ${{ needs.pr_commet_trigger.outputs.description }}"
+          echo "${{ toJson(needs.pr_comment_trigger.outputs) }}"
