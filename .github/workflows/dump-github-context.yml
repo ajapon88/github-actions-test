@@ -29,7 +29,7 @@ on:
   release:
   status:
   watch:
-  workflow_run:
+  # workflow_run:
 
 jobs:
   dump_context:
