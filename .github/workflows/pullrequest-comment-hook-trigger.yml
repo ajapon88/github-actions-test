@@ -7,6 +7,8 @@ jobs:
   pr_comment_trigger:
     runs-on: ubuntu-latest
     if: ${{ github.event.issue.pull_request }}
+    env:
+      TRIGGER_PHRASE: test this please
     outputs:
       number: ${{ steps.metadata.outputs.number }}
       body: ${{ steps.metadata.outputs.body }}
@@ -14,10 +16,19 @@ jobs:
       ref: ${{ steps.metadata.outputs.ref }}
       title: ${{ steps.metadata.outputs.title }}
       description: ${{ steps.metadata.outputs.description }}
-      triggerd: ${{ steps.metadata.outputs.triggerd }}
+      triggerd: ${{ steps.check_trigger_phrase.triggerd }}
     steps:
+      - name: check trigger phrase
+        id: check_trigger_phrase
+        run: |
+          if [[ ${{ github.event.comment.body }} =~ "${TRIGGER_PHRASE}" ]]; then
+            echo "::set-output name=triggerd::true"
+          else
+            echo "::set-output name=triggerd::false"
+          fi
       - name: metadata
         id: metadata
+        if: ${{ check_trigger_phrase.triggerd }} == 'true'
         run: |
           echo "::set-output name=number::${{ github.event.issue.number }}"
           echo "::set-output name=body::${{ github.event.comment.body }}"
@@ -25,7 +36,6 @@ jobs:
           echo "::set-output name=ref::${{ github.event.issue.pull_request.head.ref }}"
           echo "::set-output name=title::${{ github.event.issue.pull_request.title }}"
           echo "::set-output name=description::${{ github.event.issue.pull_request.body }}"
-          echo "::set-output name=triggerd::true"
 
   triggered_action:
     runs-on: ubuntu-latest
