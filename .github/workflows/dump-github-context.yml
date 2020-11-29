@@ -35,4 +35,5 @@ jobs:
   dump_context:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "${{ toJson(github) }}"
+      - name: dumpt github context
+        run: echo "${{ toJson(github) }}"
