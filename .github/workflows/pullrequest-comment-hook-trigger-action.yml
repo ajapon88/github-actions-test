@@ -1,0 +1,43 @@
+name: pullrequest comment hook trigger action
+
+on:
+  issue_comment:
+
+jobs:
+  pr_comment_trigger:
+    runs-on: ubuntu-latest
+    outputs:
+      triggerd: ${{ steps.trigger.outputs.triggerd }}
+      number: ${{ steps.trigger.outputs.number }}
+      comment_body: ${{ steps.trigger.outputs.comment_body }}
+      user: ${{ steps.trigger.outputs.user }}
+      ref: ${{ steps.trigger.outputs.ref }}
+      sha: ${{ steps.trigger.outputs.sha }}
+      title: ${{ steps.trigger.outputs.title }}
+      description: ${{ steps.trigger.outputs.description }}
+    steps:
+      - uses: ./.github/actions/pullrequest-comment-hook-trigger-action
+        id: trigger
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          trigger-phrase: test action please
+
+  triggered_action:
+    runs-on: ubuntu-latest
+    if: needs.pr_comment_trigger.outputs.triggerd == 'true'
+    needs:
+      - pr_comment_trigger
+    steps:
+      - name: dump outputs
+        run: echo '${{ toJson(needs.pr_comment_trigger.outputs) }}'
+      - name: comment pullrequest
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: ${{ needs.pr_comment_trigger.outputs.number }},
+              body: '${{ needs.pr_comment_trigger.outputs.comment_body }}'
+            })
