@@ -21,7 +21,7 @@ jobs:
       - name: check trigger phrase
         id: check_trigger_phrase
         run: |
-          if [[ ${{ github.event.comment.body }} =~ "${{ env.TRIGGER_PHRASE }}" ]]; then
+          if $(echo "${{ github.event.comment.body }}" | grep -e "${{ env.TRIGGER_PHRASE }}" > /dev/null); then
             echo "::set-output name=triggerd::true"
           else
             echo "::set-output name=triggerd::false"
