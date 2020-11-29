@@ -16,7 +16,7 @@ jobs:
       ref: ${{ steps.metadata.outputs.ref }}
       title: ${{ steps.metadata.outputs.title }}
       description: ${{ steps.metadata.outputs.description }}
-      triggerd: ${{ steps.check_trigger_phrase.triggerd }}
+      triggerd: ${{ steps.check_trigger_phrase.outputs.triggerd }}
     steps:
       - name: check trigger phrase
         id: check_trigger_phrase
@@ -28,7 +28,7 @@ jobs:
           fi
       - name: metadata
         id: metadata
-        if: ${{ check_trigger_phrase.triggerd }} == 'true'
+        if: ${{ steps.check_trigger_phrase.outputs.triggerd }} == 'true'
         run: |
           echo "::set-output name=number::${{ github.event.issue.number }}"
           echo "::set-output name=body::${{ github.event.comment.body }}"
