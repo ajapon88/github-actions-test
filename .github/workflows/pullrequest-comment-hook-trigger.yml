@@ -1,0 +1,39 @@
+name: pullrequest comment hook trigger
+
+on:
+  issue_comment:
+
+jobs:
+  pr_comment_trigger:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.issue.pull_request }}
+    outputs:
+      number: ${{ steps.metadata.outputs.number }}
+      body: ${{ steps.metadata.outputs.body }}
+      user: ${{ steps.metadata.outputs.user }}
+      ref: ${{ steps.metadata.outputs.ref }}
+      title: ${{ steps.metadata.outputs.title }}
+      description: ${{ steps.metadata.outputs.description }}
+      triggerd: ${{ steps.metadata.outputs.triggerd }}
+    steps:
+      - name: metadata
+        id: metadata
+        run: |
+          echo "::set-output name=number::${{ github.event.issue.number }}"
+          echo "::set-output name=body::${{ github.event.comment.body }}"
+          echo "::set-output name=user::${{ github.event.comment.user.login }}"
+          echo "::set-output name=ref::${{ github.event.issue.pull_request.head.ref }}"
+          echo "::set-output name=title::${{ github.event.issue.pull_request.title }}"
+          echo "::set-output name=description::${{ github.event.issue.pull_request.body }}"
+          echo "::set-output name=triggerd::true"
+
+  triggered_action:
+    runs-on: ubuntu-latest
+    if: ${{ needs.pr_commet_trigger.outputs.triggerd }}
+    needs:
+      - pr_comment_trigger
+    steps:
+      - name: triggered_action
+        run: |
+          echo "Triggered!"
+          echo "${{ toJson(needs.pr_commet_trigger.outputs) }}"
