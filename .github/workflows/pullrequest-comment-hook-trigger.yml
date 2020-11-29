@@ -45,7 +45,7 @@ jobs:
             const pull_request = await github.pulls.get({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number: context.issue.number
+              pull_number: context.issue.number
             })
             console.log("::set-output name=ref::%s", pull_request.head.ref)
             console.log("::set-output name=sha::%s", pull_request.head.sha)
