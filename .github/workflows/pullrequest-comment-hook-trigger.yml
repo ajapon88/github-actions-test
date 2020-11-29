@@ -10,18 +10,19 @@ jobs:
     env:
       TRIGGER_PHRASE: test this please
     outputs:
+      triggerd: ${{ steps.check_trigger_phrase.outputs.triggerd }}
       number: ${{ steps.metadata.outputs.number }}
       body: ${{ steps.metadata.outputs.body }}
       user: ${{ steps.metadata.outputs.user }}
       ref: ${{ steps.metadata.outputs.ref }}
       title: ${{ steps.metadata.outputs.title }}
       description: ${{ steps.metadata.outputs.description }}
-      triggerd: ${{ steps.check_trigger_phrase.outputs.triggerd }}
     steps:
       - name: check trigger phrase
         id: check_trigger_phrase
         run: |
           if $(echo "${{ github.event.comment.body }}" | grep -e "${{ env.TRIGGER_PHRASE }}" > /dev/null); then
+            echo "match trigger phase"
             echo "::set-output name=triggerd::true"
           else
             echo "::set-output name=triggerd::false"
@@ -46,4 +47,10 @@ jobs:
       - name: triggered_action
         run: |
           echo "Triggered!"
-          echo "${{ toJson(needs.pr_commet_trigger.outputs) }}"
+          echo "triggerd: ${{ needs.pr_commet_trigger.outputs.triggerd }}"
+          echo "number: ${{ needs.pr_commet_trigger.outputs.number }}"
+          echo "body: ${{ needs.pr_commet_trigger.outputs.body }}"
+          echo "user: ${{ needs.pr_commet_trigger.outputs.user }}"
+          echo "ref: ${{ needs.pr_commet_trigger.outputs.ref }}"
+          echo "title: ${{ needs.pr_commet_trigger.outputs.title }}"
+          echo "description: ${{ needs.pr_commet_trigger.outputs.description }}"
