@@ -29,7 +29,7 @@ jobs:
 
   triggered_action:
     runs-on: ubuntu-latest
-    if: ${{ needs.pr_commet_trigger.outputs.triggerd }}
+    if: ${{ needs.pr_commet_trigger.outputs.triggerd }} == 'true'
     needs:
       - pr_comment_trigger
     steps:
