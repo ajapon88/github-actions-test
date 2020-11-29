@@ -14,10 +14,10 @@ jobs:
       number: ${{ steps.metadata.outputs.number }}
       comment_body: ${{ steps.metadata.outputs.comment_body }}
       user: ${{ steps.metadata.outputs.user }}
-      ref: ${{ steps.pullrequest.outputs.ref }}
-      sha: ${{ steps.pullrequest.outputs.sha }}
-      title: ${{ steps.pullrequest.outputs.title }}
-      description: ${{ steps.pullrequest.outputs.description }}
+      ref: ${{ steps.pull_request.outputs.ref }}
+      sha: ${{ steps.pull_request.outputs.sha }}
+      title: ${{ steps.pull_request.outputs.title }}
+      description: ${{ steps.pull_request.outputs.description }}
     steps:
       - name: check trigger phrase
         id: check_trigger_phrase
@@ -36,7 +36,7 @@ jobs:
           echo "::set-output name=comment_body::${{ github.event.comment.body }}"
           echo "::set-output name=user::${{ github.event.comment.user.login }}"
       - name: get pull-request
-        id: pullrequest
+        id: pull_request
         if: steps.check_trigger_phrase.outputs.triggerd == 'true'
         uses: actions/github-script@v3
         with:
@@ -47,6 +47,7 @@ jobs:
               repo: context.repo.repo,
               pull_number: context.issue.number
             })
+            console.log(JSON.stringify(pull_request));
             console.log("::set-output name=ref::%s", pull_request.head.ref)
             console.log("::set-output name=sha::%s", pull_request.head.sha)
             console.log("::set-output name=title::%s", pull_request.title)
