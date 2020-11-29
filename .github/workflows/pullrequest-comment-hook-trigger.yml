@@ -29,7 +29,7 @@ jobs:
           fi
       - name: metadata
         id: metadata
-        if: ${{ steps.check_trigger_phrase.outputs.triggerd }} == 'true'
+        if: steps.check_trigger_phrase.outputs.triggerd == 'true'
         run: |
           echo "::set-output name=number::${{ github.event.issue.number }}"
           echo "::set-output name=body::${{ github.event.comment.body }}"
@@ -40,7 +40,7 @@ jobs:
 
   triggered_action:
     runs-on: ubuntu-latest
-    if: ${{ needs.pr_comment_trigger.outputs.triggerd }} == 'true'
+    if: needs.pr_comment_trigger.outputs.triggerd == 'true'
     needs:
       - pr_comment_trigger
     steps:
