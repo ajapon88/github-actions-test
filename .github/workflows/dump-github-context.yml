@@ -29,10 +29,11 @@ on:
   release:
   status:
   watch:
-  workflow_run:
+  # workflow_run:
 
 jobs:
   dump_context:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "${{ toJson(github) }}"
+      - name: dumpt github context
+        run: echo "${{ toJson(github) }}"
