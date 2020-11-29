@@ -12,11 +12,12 @@ jobs:
     outputs:
       triggerd: ${{ steps.check_trigger_phrase.outputs.triggerd }}
       number: ${{ steps.metadata.outputs.number }}
-      body: ${{ steps.metadata.outputs.body }}
+      comment_body: ${{ steps.metadata.outputs.comment_body }}
       user: ${{ steps.metadata.outputs.user }}
-      ref: ${{ steps.metadata.outputs.ref }}
-      title: ${{ steps.metadata.outputs.title }}
-      description: ${{ steps.metadata.outputs.description }}
+      ref: ${{ steps.pullrequest.outputs.ref }}
+      sha: ${{ steps.pullrequest.outputs.sha }}
+      title: ${{ steps.pullrequest.outputs.title }}
+      description: ${{ steps.pullrequest.outputs.description }}
     steps:
       - name: check trigger phrase
         id: check_trigger_phrase
@@ -32,11 +33,24 @@ jobs:
         if: steps.check_trigger_phrase.outputs.triggerd == 'true'
         run: |
           echo "::set-output name=number::${{ github.event.issue.number }}"
-          echo "::set-output name=body::${{ github.event.comment.body }}"
+          echo "::set-output name=comment_body::${{ github.event.comment.body }}"
           echo "::set-output name=user::${{ github.event.comment.user.login }}"
-          echo "::set-output name=ref::${{ github.event.issue.pull_request.head.ref }}"
-          echo "::set-output name=title::${{ github.event.issue.pull_request.title }}"
-          echo "::set-output name=description::${{ github.event.issue.pull_request.body }}"
+      - name: get pull-request
+        id: pullrequest
+        if: steps.check_trigger_phrase.outputs.triggerd == 'true'
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const pull_request = await github.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: ${{ needs.pr_comment_trigger.outputs.number }}
+            })
+            console.log("::set-output name=ref::${{ pull_request.head.ref }}")
+            console.log("::set-output name=sha::${{ pull_request.head.sha }}")
+            console.log("::set-output name=title::${{ pull_request.title }}")
+            console.log("::set-output name=description::${{ pull_request.body }}")
 
   triggered_action:
     runs-on: ubuntu-latest
@@ -44,14 +58,16 @@ jobs:
     needs:
       - pr_comment_trigger
     steps:
+      - name: dump outputs
+        run:  echo '${{ toJson(needs.pr_comment_trigger.outputs) }}'
       - name: comment pullrequest
         uses: actions/github-script@v3
         with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             github.issues.createComment({
-              issue_number: ${{ needs.pr_comment_trigger.outputs.number }},
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '${{ needs.pr_comment_trigger.outputs.body }}'
+              issue_number: ${{ needs.pr_comment_trigger.outputs.number }},
+              body: '${{ needs.pr_comment_trigger.outputs.comment_body }}'
             })
