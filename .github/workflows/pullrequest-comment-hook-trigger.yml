@@ -22,7 +22,7 @@ jobs:
         id: check_trigger_phrase
         run: |
           if $(echo "${{ github.event.comment.body }}" | grep -e "${{ env.TRIGGER_PHRASE }}" > /dev/null); then
-            echo "match trigger phase"
+            echo "match trigger phrase"
             echo "::set-output name=triggerd::true"
           else
             echo "::set-output name=triggerd::false"
