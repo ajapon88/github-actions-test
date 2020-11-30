@@ -4,16 +4,17 @@ const github = require('@actions/github');
 try {
     // debug
     if (core.getInput('debug').toLowerCase() == 'true') {
-        console.log(JSON.stringify(github));
+        console.log(JSON.stringify(github, null, 2));
     }
+    const payload = github.context.payload;
     // check event
-    if (github.event != 'issue_comment' && github.event.issue.pull_request == null) {
+    if (payload.eventName != 'issue_comment' && payload.issue.pull_request == null) {
         core.setOutput("triggerd", false);
         return
     }
     // check trigger phrase
     const triggerPhrase = core.getInput('trigger-phrase');
-    if (github.event.comment.body.match(triggerPhrase) == null) {
+    if (payload.comment.body.match(triggerPhrase) == null) {
         core.setOutput("triggerd", false);
         return
     }
@@ -21,15 +22,15 @@ try {
     const githubToken = core.getInput('github-token');
     const octokit = github.getOctokit(githubToken)
     const { data: pullRequest } = octokit.pulls.get({
-        owner: github.repository_owner,
-        repo: github.event.repository.name,
-        pull_number: github.event.issue.number
+        owner: github.repository.owner.login,
+        repo: payload.repository.name,
+        pull_number: payload.issue.number
     });
     // set outputs
     core.setOutput("triggerd", true);
-    core.setOutput("number", github.event.issue.number);
-    core.setOutput("comment_body", github.event.comment.body);
-    core.setOutput("user", github.event.comment.user.login);
+    core.setOutput("number", payload.issue.number);
+    core.setOutput("comment_body", payload.comment.body);
+    core.setOutput("user", payload.comment.user.login);
     core.setOutput("ref", pullRequest.head.ref);
     core.setOutput("sha", pullRequest.head.sha);
     core.setOutput("title", pullRequest.title);
