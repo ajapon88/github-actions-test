@@ -2,6 +2,10 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 
 try {
+    // debug
+    if (core.getInput('debug').toLowerCase() == 'true') {
+        console.log(JSON.stringify(github));
+    }
     // check event
     if (github.event != 'issue_comment' && github.event.issue.pull_request == null) {
         core.setOutput("triggerd", false);
