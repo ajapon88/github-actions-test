@@ -3,7 +3,8 @@ const github = require('@actions/github');
 
 try {
     // debug
-    if (core.getInput('debug').toLowerCase() == 'true') {
+    const debug = core.getInput('debug').toLowerCase() == 'true';
+    if (debug) {
         console.log(JSON.stringify(github, null, 2));
     }
     const payload = github.context.payload;
@@ -26,6 +27,9 @@ try {
         repo: payload.repository.name,
         pull_number: payload.issue.number
     });
+    if (debug) {
+        console.log(JSON.stringify(pullRequest, null, 2));
+    }
     // set outputs
     core.setOutput("triggerd", true);
     core.setOutput("number", payload.issue.number);
