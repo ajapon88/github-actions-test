@@ -22,7 +22,7 @@ try {
     const githubToken = core.getInput('github-token');
     const octokit = github.getOctokit(githubToken)
     const { data: pullRequest } = octokit.pulls.get({
-        owner: github.repository.owner.login,
+        owner: payload.repository.owner.login,
         repo: payload.repository.name,
         pull_number: payload.issue.number
     });
