@@ -30,4 +30,4 @@ outputs:
         description: pull request body
 runs:
   using: "node12"
-  main: "index.js"
+  main: "dist/index.js"
