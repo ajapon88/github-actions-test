@@ -7,6 +7,10 @@ inputs:
   trigger-phrase:
     description: "Trigger phrase"
     required: true
+  debug:
+    description: "Debug flag"
+    required: false
+    default: 'false'
 outputs:
       triggerd:
         description: if true, triggerd. otherwize, not triggerd
