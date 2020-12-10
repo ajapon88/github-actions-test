@@ -29,9 +29,11 @@ jobs:
     if: needs.pr_comment_trigger.outputs.triggerd == 'true'
     needs:
       - pr_comment_trigger
+    env:
+      PR_COMMENT_TRIGGER_OUTPUTS: ${{ toJson(needs.pr_comment_trigger.outputs) }}
     steps:
       - name: dump outputs
-        run: echo '${{ toJson(needs.pr_comment_trigger.outputs) }}'
+        run: echo "${PR_COMMENT_TRIGGER_OUTPUTS}"
       - name: comment pullrequest
         uses: actions/github-script@v3
         with:
@@ -41,5 +43,5 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: ${{ needs.pr_comment_trigger.outputs.number }},
-              body: '${{ toJson(needs.pr_comment_trigger.outputs) }}'
+              body: process.env.PR_COMMENT_TRIGGER_OUTPUTS
             })
