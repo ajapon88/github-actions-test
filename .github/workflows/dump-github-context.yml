@@ -2,6 +2,15 @@ name: dump github context
 
 on:
   workflow_dispatch:
+    inputs:
+      param1:
+        description: required param
+        default: required value
+        required: true
+      param2:
+        description: optional param
+        default: optional value
+        required: false
   repository_dispatch:
   check_run:
   check_suite:
@@ -29,7 +38,6 @@ on:
   release:
   status:
   watch:
-  # workflow_run:
 
 jobs:
   dump_context:
