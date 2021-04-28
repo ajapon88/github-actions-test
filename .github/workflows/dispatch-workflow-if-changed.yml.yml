@@ -54,7 +54,7 @@ jobs:
           if [ "${{ steps.branch.sha }}" != "${last_commit}" ]; then
             changed=true
           fi
-          echo -n "::set-output name=changed:${changed}"
+          echo "::set-output name=changed::${changed}"
 
       - name: dispatch workflow
         if: ${{ success() && steps.check-commit.outputs.changed == 'true' }}
