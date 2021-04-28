@@ -71,7 +71,10 @@ jobs:
               repo: context.repo.repo,
               workflow_id: "${{ env.WORKFLOW_ID }}",
               ref: "${{ env.BRANCH }}",
-              inputs: {},
+              inputs: {
+                param1: "A",
+                param2: "B",
+              },
             })
             console.log(result)
 
