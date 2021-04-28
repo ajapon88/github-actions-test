@@ -70,7 +70,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               workflow_id: "${{ env.WORKFLOW_ID }}",
-              ref: context.ref,
+              ref: "${{ env.BRANCH }}",
             })
             console.log(result)
 
