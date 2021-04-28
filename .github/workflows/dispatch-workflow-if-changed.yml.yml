@@ -1,0 +1,73 @@
+name: dispatch workflow if changed branch
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: target branch
+        default: master
+        required: true
+
+env:
+  WORKFLOW_ID: dump-github-context
+  BRANCH: ${{ github.event.inputs.branch }}
+
+jobs:
+  check-sha:
+    runs-on: ubuntu-latest
+    steps:
+      - name: get branch sha
+        id: branch
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const result = await github.repos.getBranch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              branch: env.BRANCH,
+            }
+            console.log(result)
+            const branch = result.data
+            console.log("::set-output name=sha::${branch.sha}")
+
+      - name: cache last commit
+        if: ${{ success() }}
+        id: last-commit
+        uses: actions/cache@v2
+        with:
+          path: last-commit
+          key: ${{ env.BRANCH }}-branch-last-commit
+            
+      - name: check commit
+        if: ${{ success() }}
+        id: check-commit
+        run: |
+          last_commit=
+          if [ -e last-commit ]; then
+            last_commit=$(cat last-commit)
+            echo "last commit: ${last_commit}"
+          fi
+          changed=false
+          if [ "${{ steps.branch.sha }}" != "${last_commit}" ]; then
+            changed=true
+          fi
+          echo "::set-output name=changed:${changed}"
+
+      - name: dispatch workflow
+        if: ${{ success() }} && steps.check-commit.outputs.changed == 'true'
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const result = await octokit.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: env.WORKFLOW_ID,
+              ref: env.BRANCH,
+            })
+            console.log(result)
+
+      - name: update last commit
+        if: ${{ success() }} && steps.check-commit.outputs.changed == 'true'
+        run: echo -n "${{ steps.branch.sha }}" > last-commit
