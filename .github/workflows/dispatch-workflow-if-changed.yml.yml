@@ -47,6 +47,8 @@ jobs:
           if [ -e last-commit ]; then
             last_commit=$(cat last-commit)
             echo "last commit: ${last_commit}"
+          else
+            echo "initial commit"
           fi
           changed=false
           if [ "${{ steps.branch.sha }}" != "${last_commit}" ]; then
