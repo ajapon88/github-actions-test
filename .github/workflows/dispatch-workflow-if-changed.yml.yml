@@ -51,7 +51,7 @@ jobs:
             echo "initial commit"
           fi
           changed=false
-          if [ "${{ steps.branch.sha }}" != "${last_commit}" ]; then
+          if [ "${{ steps.branch.outputs.sha }}" != "${last_commit}" ]; then
             changed=true
           fi
           echo "::set-output name=changed::${changed}"
@@ -72,4 +72,4 @@ jobs:
 
       - name: update last commit
         if: ${{ success() && steps.check-commit.outputs.changed == 'true' }}
-        run: echo -n "${{ steps.branch.sha }}" > last-commit
+        run: echo -n "${{ steps.branch.outputs.sha }}" > last-commit
