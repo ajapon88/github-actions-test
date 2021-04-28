@@ -25,7 +25,7 @@ jobs:
             const result = await github.repos.getBranch({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              branch: ${{ env.BRANCH }},
+              branch: "${{ env.BRANCH }}",
             })
             console.log(result)
             const branch = result.data
@@ -60,11 +60,11 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const result = await octokit.rest.actions.createWorkflowDispatch({
+            const result = await github.actions.createWorkflowDispatch({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              workflow_id: ${{ env.WORKFLOW_ID }},
-              ref: ${{ env.BRANCH }},
+              workflow_id: "${{ env.WORKFLOW_ID }}",
+              ref: "${{ env.BRANCH }}",
             })
             console.log(result)
 
