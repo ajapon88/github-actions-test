@@ -7,10 +7,14 @@ on:
         description: target branch
         default: master
         required: true
+      workflor_id:
+        description: dispatch workflow id
+        default: dump-github-context.yml
+        required: true
 
 env:
-  WORKFLOW_ID: dump-github-context.yml
   BRANCH: ${{ github.event.inputs.branch }}
+  WORKFLOW_ID: ${{ github.event.inputs.workflor_id }}
 
 jobs:
   dispach-wotkflow-if-changed:
@@ -38,7 +42,7 @@ jobs:
         with:
           path: last-commit
           key: ${{ env.BRANCH }}-branch-last-commit
-            
+
       - name: check commit
         if: ${{ success() }}
         id: check-commit
