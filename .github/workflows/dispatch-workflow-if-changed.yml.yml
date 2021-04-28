@@ -55,7 +55,7 @@ jobs:
           echo "::set-output name=changed:${changed}"
 
       - name: dispatch workflow
-        if: ${{ success() }} && steps.check-commit.outputs.changed == 'true'
+        if: ${{ success() && steps.check-commit.outputs.changed == 'true' }}
         uses: actions/github-script@v4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -69,5 +69,5 @@ jobs:
             console.log(result)
 
       - name: update last commit
-        if: ${{ success() }} && steps.check-commit.outputs.changed == 'true'
+        if: ${{ success() && steps.check-commit.outputs.changed == 'true' }}
         run: echo -n "${{ steps.branch.sha }}" > last-commit
