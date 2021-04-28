@@ -76,4 +76,6 @@ jobs:
 
       - name: update last commit
         if: ${{ success() && steps.check-commit.outputs.changed == 'true' }}
-        run: echo -n "${{ steps.branch.outputs.sha }}" > "last/commit"
+        run: |
+          mkdir -p last
+          echo -n "${{ steps.branch.outputs.sha }}" > "last/commit"
