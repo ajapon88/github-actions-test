@@ -13,7 +13,7 @@ env:
   BRANCH: ${{ github.event.inputs.branch }}
 
 jobs:
-  check-sha:
+  dispach-wotkflow-if-changed:
     runs-on: ubuntu-latest
     steps:
       - name: get branch sha
@@ -29,7 +29,7 @@ jobs:
             })
             console.log(result)
             const branch = result.data
-            console.log("::set-output name=sha::${branch.sha}")
+            console.log("::set-output name=sha::%s", branch.sha)
 
       - name: cache last commit
         if: ${{ success() }}
