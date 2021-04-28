@@ -64,7 +64,7 @@ jobs:
         if: ${{ success() && steps.check-commit.outputs.changed == 'true' }}
         uses: actions/github-script@v4
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           script: |
             const result = await github.actions.createWorkflowDispatch({
               owner: context.repo.owner,
