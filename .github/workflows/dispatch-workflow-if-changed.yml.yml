@@ -9,7 +9,7 @@ on:
         required: true
 
 env:
-  WORKFLOW_ID: dump-github-context
+  WORKFLOW_ID: dump-github-context.yml
   BRANCH: ${{ github.event.inputs.branch }}
 
 jobs:
