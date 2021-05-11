@@ -41,7 +41,8 @@ jobs:
         uses: actions/cache@v2
         with:
           path: last
-          key: ${{ env.BRANCH }}-branch-last-commit
+          key: last-commit-${{ env.BRANCH }}-{{ steps.branch.outputs.sha }}
+          restore-keys: last-commit-${{ env.BRANCH }}
 
       - name: check commit
         if: ${{ success() }}
