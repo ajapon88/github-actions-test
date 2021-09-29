@@ -3,9 +3,14 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  create-pullrequest:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - run: date +%s > report.txt
       - uses: peter-evans/create-pull-request@v3
+        with:
+          commit-message: commit
+          branch: update-branch
+          branch-suffix: timestamp
+          title: create pull request test
