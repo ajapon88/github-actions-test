@@ -11,6 +11,14 @@ on:
         description: optional param
         default: optional value
         required: false
+      condition1:
+        description: boolean param
+        default: 'false'
+        type: boolean
+      condition2:
+        description: boolean param
+        default: 'false'
+        type: boolean
   repository_dispatch:
   check_run:
   check_suite:
@@ -38,6 +46,10 @@ on:
   release:
   status:
   watch:
+
+env:
+  CONDITION_OR_PARAM: ${{ github.event.inputs && (github.event.inputs.condition1 == 'true' || github.event.inputs.condition2 == 'true') }}
+  CONDITION_AND_PARAM: ${{ github.event.inputs && (github.event.inputs.condition1 == 'true' && github.event.inputs.condition2 == 'true') }}
 
 jobs:
   dump_context:
